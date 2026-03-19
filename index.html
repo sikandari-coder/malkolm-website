@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Malkolm — Your AI Health Coach</title>
+<meta name="description" content="Malkolm connects your health data and coaches you with real insight. Not generic advice. Your data, your patterns, your plan.">
+<meta name="theme-color" content="#0F0A08">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ember: #0F0A08;
+  --surface: #1A1410;
+  --card: #231C15;
+  --border: #3D2E1F;
+  --t1: #F5F0EA;
+  --t2: #C2B8AA;
+  --t3: #8A7E72;
+  --tang: #F97316;
+  --tang-soft: #FDBA74;
+  --tang-deep: #DC5F0C;
+  --navy: #1E3A5F;
+  --green-1: #0F6E56;
+  --green-2: #3A7A3A;
+  --gold: #9B6B1A;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', -apple-system, system-ui, sans-serif;
+  background: var(--ember);
+  color: var(--t1);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: var(--tang-soft); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes glowPulse { 0%,100% { opacity: 0.04; } 50% { opacity: 0.08; } }
+@keyframes drawCurve { from { stroke-dashoffset: 200; } to { stroke-dashoffset: 0; } }
+.reveal { opacity: 0; transform: translateY(24px); }
+.reveal.visible { animation: fadeUp 0.7s ease-out forwards; }
+
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 32px;
+  background: rgba(15,10,8,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 0.5px solid rgba(61,46,31,0.4);
+}
+.nav-wm {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 20px; font-weight: 700; letter-spacing: -0.5px;
+  color: var(--t1); display: flex; align-items: baseline;
+}
+.nav-links { display: flex; gap: 24px; align-items: center; }
+.nav-links a { font-size: 13px; font-weight: 500; color: var(--t3); transition: color 0.2s; }
+.nav-links a:hover { color: var(--t1); text-decoration: none; }
+.nav-cta {
+  padding: 9px 20px; border-radius: 9px;
+  background: var(--tang); color: #fff;
+  font-weight: 600; font-size: 13px; transition: opacity 0.2s;
+}
+.nav-cta:hover { opacity: 0.9; text-decoration: none; color: #fff; }
+
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 120px 32px 80px; text-align: center; position: relative;
+}
+.hero-glow {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%);
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(249,115,22,0.06) 0%, transparent 70%);
+  pointer-events: none; animation: glowPulse 6s ease-in-out infinite;
+}
+.hero-logo { margin-bottom: 32px; }
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 56px; font-weight: 300; letter-spacing: -1.5px;
+  line-height: 1.15; color: var(--t1);
+  max-width: 680px; margin-bottom: 20px;
+}
+.hero h1 em { font-style: italic; font-weight: 400; color: var(--tang-soft); }
+.hero-sub {
+  font-size: 17px; line-height: 1.75; color: var(--t3);
+  max-width: 480px; margin: 0 auto 36px;
+}
+.hero-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 15px 32px; border-radius: 12px;
+  background: var(--tang); color: var(--ember);
+  font-size: 15px; font-weight: 600;
+  transition: transform 0.15s, opacity 0.2s;
+}
+.hero-cta:hover { opacity: 0.9; transform: translateY(-1px); text-decoration: none; color: var(--ember); }
+.hero-note { font-size: 12px; color: var(--t3); margin-top: 16px; }
+
+.convo {
+  max-width: 640px; margin: 0 auto; padding: 80px 24px;
+}
+.convo-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--t3); margin-bottom: 32px; text-align: center;
+}
+.msg { margin-bottom: 16px; max-width: 88%; }
+.msg-m {
+  font-size: 15px; line-height: 1.7; color: var(--t2);
+  padding: 14px 18px;
+  background: var(--surface); border: 0.5px solid var(--border);
+  border-radius: 16px 16px 16px 4px;
+}
+.msg-m strong { color: var(--t1); font-weight: 500; }
+.msg-u {
+  font-size: 14px; line-height: 1.6; color: var(--t1);
+  padding: 12px 16px; background: var(--navy);
+  border-radius: 16px 16px 4px 16px;
+  margin-left: auto; max-width: 75%;
+}
+.msg-card {
+  background: var(--card); border: 0.5px solid var(--border);
+  border-radius: 14px; padding: 16px 18px;
+  margin-bottom: 16px; max-width: 88%;
+}
+.msg-card-label {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--tang); margin-bottom: 10px;
+}
+.stat-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.stat-pill { padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+.stat-navy { background: rgba(30,58,95,0.3); color: #93c5fd; }
+.stat-green { background: rgba(15,110,86,0.2); color: #4ade80; }
+.stat-tang { background: rgba(249,115,22,0.15); color: var(--tang-soft); }
+.insight {
+  font-size: 13px; line-height: 1.65; color: var(--tang-soft);
+  padding: 12px 14px; border-left: 2px solid var(--tang);
+  background: rgba(249,115,22,0.05);
+  border-radius: 0 8px 8px 0; margin-top: 10px;
+}
+.msg-spacer { height: 24px; }
+
+.section-break {
+  display: flex; align-items: center; justify-content: center; padding: 60px 0;
+}
+.section-break .line { flex: 1; height: 0.5px; background: var(--border); max-width: 120px; }
+.section-break svg { margin: 0 20px; }
+
+.why { max-width: 640px; margin: 0 auto; padding: 40px 24px 80px; }
+.why h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 36px; font-weight: 300; letter-spacing: -0.8px;
+  line-height: 1.2; color: var(--t1); margin-bottom: 32px; text-align: center;
+}
+.why-card {
+  background: var(--surface); border: 0.5px solid var(--border);
+  border-radius: 14px; padding: 24px; margin-bottom: 14px;
+}
+.why-label {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.8px; margin-bottom: 8px;
+}
+.why-card h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 20px; font-weight: 400; letter-spacing: -0.3px;
+  line-height: 1.35; color: var(--t1); margin-bottom: 8px;
+}
+.why-card p { font-size: 14px; color: var(--t3); line-height: 1.65; }
+
+.cta-section { padding: 80px 24px; text-align: center; }
+.cta-section h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 40px; font-weight: 300; letter-spacing: -1px;
+  line-height: 1.2; color: var(--t1); max-width: 540px; margin: 0 auto 14px;
+}
+.cta-section p {
+  font-size: 15px; color: var(--t3); line-height: 1.7;
+  max-width: 420px; margin: 0 auto 32px;
+}
+
+/* Waitlist form */
+.waitlist-form {
+  display: flex; gap: 10px; max-width: 420px; margin: 0 auto;
+  justify-content: center; flex-wrap: wrap;
+}
+.waitlist-form input[type="email"] {
+  flex: 1; min-width: 220px;
+  padding: 14px 18px; border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface); color: var(--t1);
+  font-family: 'DM Sans', sans-serif; font-size: 15px;
+  outline: none; transition: border-color 0.2s;
+}
+.waitlist-form input[type="email"]::placeholder { color: var(--t3); }
+.waitlist-form input[type="email"]:focus { border-color: var(--tang); }
+.waitlist-form button {
+  padding: 14px 28px; border-radius: 12px; border: none;
+  background: var(--tang); color: var(--ember);
+  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.waitlist-form button:hover { opacity: 0.9; transform: translateY(-1px); }
+.waitlist-form button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.waitlist-msg {
+  font-size: 13px; margin-top: 12px; min-height: 20px;
+}
+.waitlist-msg.success { color: #4ade80; }
+.waitlist-msg.error { color: var(--tang); }
+
+.footer {
+  max-width: 640px; margin: 0 auto; padding: 32px 24px;
+  border-top: 0.5px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-left { display: flex; align-items: center; gap: 8px; }
+.footer-wm { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; color: var(--t2); }
+.footer-copy { font-size: 11px; color: var(--t3); }
+.footer-links { display: flex; gap: 20px; font-size: 11px; }
+.footer-links a { color: var(--t3); }
+.footer-links a:hover { color: var(--t1); }
+
+@media (max-width: 640px) {
+  .hero h1 { font-size: 38px; }
+  .hero { padding: 100px 20px 60px; }
+  .nav { padding: 14px 20px; }
+  .convo, .why { padding-left: 20px; padding-right: 20px; }
+  .nav-links .hide-m { display: none; }
+  .why h2 { font-size: 28px; }
+  .cta-section h2 { font-size: 30px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-wm">malk<svg width="11" height="10" viewBox="0 0 20 19" style="margin:0 0.5px;transform:translateY(-0.5px)"><path d="M10 18L8.55 16.7C3.4 12.1 0 9.1 0 5.4C0 2.4 2.4 0 5.5 0C7.2 0 8.9 0.8 10 2C11.1 0.8 12.8 0 14.5 0C17.6 0 20 2.4 20 5.4C20 9.1 16.6 12.1 11.45 16.7L10 18Z" fill="#F97316"/></svg>lm</div>
+  <div class="nav-links">
+    <a href="#conversation" class="hide-m">See it work</a>
+    <a href="#why" class="hide-m">Why Malkolm</a>
+    <a href="#waitlist" class="nav-cta">Join waitlist</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-logo" style="animation:fadeUp 0.8s ease-out 0.1s both">
+    <svg width="120" height="120" viewBox="0 0 80 80">
+      <rect x="4" y="4" width="72" height="72" rx="18" fill="#0F0A08"/>
+      <path d="M10 56 C19 56 27 22 40 22 C53 22 61 56 70 56" fill="none" stroke="#0F6E56" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M14 52 C22 52 29 24 40 24 C51 24 58 52 66 52" fill="none" stroke="#3A7A3A" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M18 48 C25 48 31 27 40 27 C49 27 55 48 62 48" fill="none" stroke="#9B6B1A" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M22 44 C28 44 33 30 40 30 C47 30 52 44 58 44" fill="none" stroke="#E87A14" stroke-width="3.2" stroke-linecap="round"/>
+      <path d="M26 41 C31 41 35 33 40 33 C45 33 49 41 54 41" fill="none" stroke="#FDBA74" stroke-width="3.8" stroke-linecap="round"/>
+      <g transform="translate(40,18) scale(0.8)"><path d="M0 9L-1.45 7.7C-6.6 3.1 -10 0.1 -10 -3.6C-10 -6.6 -7.6 -9 -4.5 -9C-2.8 -9 -1.1 -8.2 0 -7C1.1 -8.2 2.8 -9 4.5 -9C7.6 -9 10 -6.6 10 -3.6C10 0.1 6.6 3.1 1.45 7.7L0 9Z" fill="#F97316"/></g>
+    </svg>
+  </div>
+  <h1 style="animation:fadeUp 0.8s ease-out 0.3s both">Your health data<br>finally <em>talks back</em>.</h1>
+  <p class="hero-sub" style="animation:fadeUp 0.8s ease-out 0.5s both">Malkolm connects your wearables, sleep, workouts, and meals. Then coaches you — with real insight, not generic advice.</p>
+  <a href="#waitlist" class="hero-cta" style="animation:fadeUp 0.8s ease-out 0.7s both">Join the waitlist</a>
+  <div class="hero-note" style="animation:fadeUp 0.8s ease-out 0.9s both">Invite required</div>
+</section>
+
+<section class="convo" id="conversation">
+  <div class="convo-label reveal">This is what 6:47am looks like with Malkolm</div>
+  <div class="msg reveal"><div class="msg-m">Good morning. Your Apple Watch logged 6.9 hours last night — <strong>deep sleep hit 68 minutes</strong>. That's the third night above 60 this week.</div></div>
+  <div class="msg-card reveal">
+    <div class="msg-card-label">Your morning briefing</div>
+    <div class="stat-row">
+      <div class="stat-pill stat-navy">6.9h sleep</div>
+      <div class="stat-pill stat-green">HRV 47 ↑3</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-pill stat-tang">Deep 68 min</div>
+      <div class="stat-pill" style="background:rgba(232,230,225,0.08);color:var(--t3)">RHR 54</div>
+    </div>
+  </div>
+  <div class="msg reveal"><div class="msg-m">Your magnesium protocol is working. HRV is up 11% since you started it two weeks ago. <strong>Keep going.</strong></div></div>
+  <div class="msg reveal"><div class="insight">Your body is ready to push today. HRV is high, resting heart rate is low, and you had a full rest day yesterday. If you've been waiting for a day to go heavy — this is it.</div></div>
+  <div class="msg-spacer"></div>
+  <div class="msg reveal"><div class="msg-u">I'm doing HIIT at 8am. What should I eat before?</div></div>
+  <div class="msg reveal"><div class="msg-m">For a high-intensity session in 70 minutes, you want fast-digesting carbs and moderate protein. <strong>Skip the fat — it'll slow absorption.</strong></div></div>
+  <div class="msg reveal"><div class="msg-m">Two eggs, one slice of toast, a banana. Eat within the next 15 minutes. You'll peak right when the session starts.</div></div>
+  <div class="msg-spacer"></div>
+  <div class="convo-label reveal" style="margin-top:40px">After the workout</div>
+  <div class="msg reveal"><div class="msg-m">Just saw your workout land. <strong>42 minutes, avg HR 164, peak 181.</strong> That's your highest output in two weeks — and your recovery between intervals was faster than last Thursday.</div></div>
+  <div class="msg-card reveal">
+    <div class="msg-card-label">Post-workout card</div>
+    <div class="stat-row">
+      <div class="stat-pill stat-tang">42 min HIIT</div>
+      <div class="stat-pill stat-navy">Avg HR 164</div>
+    </div>
+    <div class="insight" style="margin-top:8px">Recovery between intervals: 12s faster than Thursday. Your aerobic base is building. The Zone 2 work is paying off.</div>
+  </div>
+  <div class="msg reveal"><div class="msg-m">Tomorrow: recovery day. Zone 2 walk or gentle yoga. Your nervous system needs 48 hours after that output. I'll check in tomorrow morning.</div></div>
+</section>
+
+<div class="section-break">
+  <div class="line"></div>
+  <svg width="16" height="16" viewBox="0 0 80 80" style="opacity:0.4">
+    <path d="M22 44 C28 44 33 30 40 30 C47 30 52 44 58 44" fill="none" stroke="#E87A14" stroke-width="3.2" stroke-linecap="round"/>
+    <path d="M26 41 C31 41 35 33 40 33 C45 33 49 41 54 41" fill="none" stroke="#FDBA74" stroke-width="3.8" stroke-linecap="round"/>
+    <g transform="translate(40,22) scale(0.7)"><path d="M0 9L-1.45 7.7C-6.6 3.1 -10 0.1 -10 -3.6C-10 -6.6 -7.6 -9 -4.5 -9C-2.8 -9 -1.1 -8.2 0 -7C1.1 -8.2 2.8 -9 4.5 -9C7.6 -9 10 -6.6 10 -3.6C10 0.1 6.6 3.1 1.45 7.7L0 9Z" fill="#F97316"/></g>
+  </svg>
+  <div class="line"></div>
+</div>
+
+<section class="why" id="why">
+  <h2 class="reveal">Not another health app.</h2>
+  <div class="why-card reveal">
+    <div class="why-label" style="color:var(--tang)">The problem</div>
+    <h3>You have 6 health apps. None of them talk to each other.</h3>
+    <p>Your sleep app doesn't know you lifted heavy yesterday. Your fitness tracker doesn't know you slept badly. No app sees the full picture — so no app can give you real advice.</p>
+  </div>
+  <div class="why-card reveal">
+    <div class="why-label" style="color:var(--green-2)">What Malkolm does differently</div>
+    <h3>Connects everything. Then coaches you.</h3>
+    <p>Sleep, HRV, workouts, nutrition, recovery — Malkolm reads all of it. Then tells you what it actually means: when to push, when to rest, what to eat, and why.</p>
+  </div>
+  <div class="why-card reveal">
+    <div class="why-label" style="color:var(--tang-soft)">Not a dashboard</div>
+    <h3>Malkolm doesn't show you charts and leave you to figure it out.</h3>
+    <p>"Your HRV dropped 18% — skip the heavy lift, do Zone 2 instead." That's coaching. A chart with a red arrow is just data.</p>
+  </div>
+  <div class="why-card reveal">
+    <div class="why-label" style="color:var(--t3)">Proactive</div>
+    <h3>Malkolm reaches out to you. You don't have to remember to open the app.</h3>
+    <p>Morning briefings on your Watch. Post-workout analysis before you've showered. Meal timing nudges when they matter. Coaching arrives at the right moment — not when you remember to check.</p>
+  </div>
+</section>
+
+<section class="cta-section" id="waitlist">
+  <h2 class="reveal">Your health deserves a coach<br>who unlocks the possible.</h2>
+  <p class="reveal">Malkolm is in closed beta. Join the waitlist — every referral moves you up.</p>
+  <form class="waitlist-form reveal" id="waitlistForm">
+    <input type="email" name="email" placeholder="you@email.com" required autocomplete="email">
+    <button type="submit">Join the waitlist</button>
+  </form>
+  <div class="waitlist-msg reveal" id="waitlistMsg"></div>
+</section>
+
+<footer class="footer">
+  <div class="footer-left">
+    <div class="footer-wm">malk<svg width="9" height="8" viewBox="0 0 20 19" style="margin:0 0.5px;transform:translateY(-0.5px)"><path d="M10 18L8.55 16.7C3.4 12.1 0 9.1 0 5.4C0 2.4 2.4 0 5.5 0C7.2 0 8.9 0.8 10 2C11.1 0.8 12.8 0 14.5 0C17.6 0 20 2.4 20 5.4C20 9.1 16.6 12.1 11.45 16.7L10 18Z" fill="#F97316"/></svg>lm</div>
+    <div class="footer-copy">&middot; Vayu Health Inc &middot; 2026</div>
+  </div>
+  <div class="footer-links">
+    <a href="/privacy">Privacy</a>
+    <a href="/terms">Terms</a>
+  </div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }});
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+document.getElementById('waitlistForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const btn = form.querySelector('button');
+  const msg = document.getElementById('waitlistMsg');
+  const email = form.email.value.trim();
+
+  btn.disabled = true;
+  btn.textContent = 'Joining...';
+  msg.textContent = '';
+  msg.className = 'waitlist-msg';
+
+  try {
+    const res = await fetch('/api/waitlist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      msg.textContent = "You're on the list. We'll be in touch.";
+      msg.className = 'waitlist-msg success';
+      form.email.value = '';
+    } else {
+      msg.textContent = data.error || 'Something went wrong. Try again.';
+      msg.className = 'waitlist-msg error';
+    }
+  } catch {
+    msg.textContent = 'Something went wrong. Try again.';
+    msg.className = 'waitlist-msg error';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Join the waitlist';
+});
+</script>
+</body>
+</html>
