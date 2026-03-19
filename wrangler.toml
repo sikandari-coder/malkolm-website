@@ -1,0 +1,6 @@
+name = "malkolm-website"
+compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "WAITLIST"
+id = "5fa2eda65a8a4983ae154cc2b77c38d6"
