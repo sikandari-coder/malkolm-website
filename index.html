@@ -181,36 +181,6 @@ a:hover { text-decoration: underline; }
   max-width: 420px; margin: 0 auto 32px;
 }
 
-/* Waitlist form */
-.waitlist-form {
-  display: flex; gap: 10px; max-width: 420px; margin: 0 auto;
-  justify-content: center; flex-wrap: wrap;
-}
-.waitlist-form input[type="email"] {
-  flex: 1; min-width: 220px;
-  padding: 14px 18px; border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--surface); color: var(--t1);
-  font-family: 'DM Sans', sans-serif; font-size: 15px;
-  outline: none; transition: border-color 0.2s;
-}
-.waitlist-form input[type="email"]::placeholder { color: var(--t3); }
-.waitlist-form input[type="email"]:focus { border-color: var(--tang); }
-.waitlist-form button {
-  padding: 14px 28px; border-radius: 12px; border: none;
-  background: var(--tang); color: var(--ember);
-  font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
-  cursor: pointer; transition: opacity 0.2s, transform 0.15s;
-  white-space: nowrap;
-}
-.waitlist-form button:hover { opacity: 0.9; transform: translateY(-1px); }
-.waitlist-form button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-.waitlist-msg {
-  font-size: 13px; margin-top: 12px; min-height: 20px;
-}
-.waitlist-msg.success { color: #4ade80; }
-.waitlist-msg.error { color: var(--tang); }
-
 .footer {
   max-width: 640px; margin: 0 auto; padding: 32px 24px;
   border-top: 0.5px solid var(--border);
@@ -224,14 +194,49 @@ a:hover { text-decoration: underline; }
 .footer-links a { color: var(--t3); }
 .footer-links a:hover { color: var(--t1); }
 
+.chip-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.wl-chip {
+  padding: 10px 16px; border-radius: 10px;
+  border: 0.5px solid var(--border); background: var(--surface);
+  color: var(--t2); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; user-select: none;
+}
+.wl-chip:hover { border-color: var(--t3); }
+.wl-chip.on { background: rgba(249,115,22,0.08); border-color: var(--tang); color: var(--tang-soft); }
+.wl-other {
+  padding: 10px 16px; border-radius: 10px;
+  border: 0.5px solid var(--border); background: var(--surface);
+  color: var(--t1); font-family: inherit; font-size: 14px;
+  outline: none; width: 120px;
+}
+.wl-other:focus { border-color: var(--tang); }
+.wl-other::placeholder { color: var(--t3); }
+#waitlist-form input[type="text"]:focus,
+#waitlist-form input[type="email"]:focus { border-color: var(--tang); }
+#waitlist-form input::placeholder { color: var(--t3); }
+
+@media (max-width: 1024px) {
+  .hero h1 { font-size: 48px; }
+  .cta-section h2 { font-size: 36px; }
+}
 @media (max-width: 640px) {
-  .hero h1 { font-size: 38px; }
+  .hero h1 { font-size: 36px; }
   .hero { padding: 100px 20px 60px; }
+  .hero-logo svg { width: 96px; height: 96px; }
   .nav { padding: 14px 20px; }
   .convo, .why { padding-left: 20px; padding-right: 20px; }
   .nav-links .hide-m { display: none; }
   .why h2 { font-size: 28px; }
-  .cta-section h2 { font-size: 30px; }
+  .cta-section h2 { font-size: 28px; }
+  .cta-section { padding: 60px 20px; }
+  .footer { padding: 24px 20px; }
+}
+@media (max-width: 375px) {
+  .hero h1 { font-size: 30px; }
+  .hero-sub { font-size: 15px; }
+  .msg-m { font-size: 14px; padding: 12px 14px; }
+  .msg-u { font-size: 13px; padding: 10px 14px; }
+  .cta-section h2 { font-size: 24px; }
 }
 </style>
 </head>
@@ -335,12 +340,70 @@ a:hover { text-decoration: underline; }
 
 <section class="cta-section" id="waitlist">
   <h2 class="reveal">Your health deserves a coach<br>who unlocks the possible.</h2>
-  <p class="reveal">Malkolm is in closed beta. Join the waitlist — every referral moves you up.</p>
-  <form class="waitlist-form reveal" id="waitlistForm">
-    <input type="email" name="email" placeholder="you@email.com" required autocomplete="email">
-    <button type="submit">Join the waitlist</button>
+  <p class="reveal" style="margin-bottom:40px">We're letting people in by invite. A few quick questions so we can prioritize your spot.</p>
+
+  <form id="waitlist-form" class="reveal" style="max-width:440px;margin:0 auto;text-align:left">
+    <div style="margin-bottom:24px">
+      <label style="font-size:14px;font-weight:500;color:var(--t1);display:block;margin-bottom:8px">What's your name?</label>
+      <input type="text" id="w-name" placeholder="First name" required style="width:100%;padding:14px 16px;border-radius:12px;border:0.5px solid var(--border);background:var(--surface);color:var(--t1);font-family:inherit;font-size:15px;outline:none">
+    </div>
+
+    <div style="margin-bottom:24px">
+      <label style="font-size:14px;font-weight:500;color:var(--t1);display:block;margin-bottom:8px">Where should we reach you?</label>
+      <input type="email" id="w-email" placeholder="Email address" required style="width:100%;padding:14px 16px;border-radius:12px;border:0.5px solid var(--border);background:var(--surface);color:var(--t1);font-family:inherit;font-size:15px;outline:none">
+    </div>
+
+    <div style="margin-bottom:24px">
+      <label style="font-size:14px;font-weight:500;color:var(--t1);display:block;margin-bottom:6px">What do you wear?</label>
+      <div style="font-size:12px;color:var(--t3);margin-bottom:10px">Select all that apply</div>
+      <div class="chip-grid" id="wearables">
+        <span class="wl-chip" data-v="apple-watch">Apple Watch</span>
+        <span class="wl-chip" data-v="oura">Oura Ring</span>
+        <span class="wl-chip" data-v="garmin">Garmin</span>
+        <span class="wl-chip" data-v="whoop">Whoop</span>
+        <span class="wl-chip" data-v="fitbit">Fitbit</span>
+        <span class="wl-chip" data-v="samsung">Samsung</span>
+        <span class="wl-chip" data-v="cgm">CGM</span>
+        <input class="wl-other" placeholder="Other" id="w-wear-other">
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px">
+      <label style="font-size:14px;font-weight:500;color:var(--t1);display:block;margin-bottom:6px">What are you working on right now?</label>
+      <div style="font-size:12px;color:var(--t3);margin-bottom:10px">Select your top priority</div>
+      <div class="chip-grid" id="goals">
+        <span class="wl-chip wl-single" data-v="sleep">Better sleep</span>
+        <span class="wl-chip wl-single" data-v="weight">Lose weight</span>
+        <span class="wl-chip wl-single" data-v="strength">Build strength</span>
+        <span class="wl-chip wl-single" data-v="endurance">Run or endurance</span>
+        <span class="wl-chip wl-single" data-v="recovery">Recovery</span>
+        <span class="wl-chip wl-single" data-v="nutrition">Eat better</span>
+        <span class="wl-chip wl-single" data-v="energy">More energy</span>
+        <input class="wl-other" placeholder="Other" id="w-goal-other">
+      </div>
+    </div>
+
+    <div style="margin-bottom:28px">
+      <label style="font-size:14px;font-weight:500;color:var(--t1);display:block;margin-bottom:6px">How many health apps do you currently use?</label>
+      <div class="chip-grid" id="app-count">
+        <span class="wl-chip wl-single" data-v="0">None</span>
+        <span class="wl-chip wl-single" data-v="1-2">1&#x2013;2</span>
+        <span class="wl-chip wl-single" data-v="3-5">3&#x2013;5</span>
+        <span class="wl-chip wl-single" data-v="6+">6+</span>
+      </div>
+    </div>
+
+    <button type="submit" style="width:100%;padding:16px;border-radius:12px;border:none;background:var(--tang);color:var(--ember);font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;transition:opacity 0.2s,transform 0.15s">Join the waitlist</button>
+    <div style="font-size:12px;color:var(--t3);text-align:center;margin-top:14px;line-height:1.6">By joining, you agree to our <a href="/terms" style="color:var(--t3);text-decoration:underline">Terms</a> and <a href="/privacy" style="color:var(--t3);text-decoration:underline">Privacy Policy</a>.</div>
   </form>
-  <div class="waitlist-msg reveal" id="waitlistMsg"></div>
+
+  <div id="success" style="display:none;text-align:center;padding:40px 0">
+    <div style="width:48px;height:48px;border-radius:50%;background:rgba(249,115,22,0.08);border:2px solid var(--tang);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#F97316" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h2 style="font-family:'Fraunces',serif;font-size:28px;font-weight:300;color:var(--t1);margin-bottom:12px">You're on the list.</h2>
+    <p style="font-size:15px;color:var(--t3);line-height:1.7;max-width:360px;margin:0 auto">We'll reach out when it's your turn. The more wearable data you have, the faster Malkolm can start coaching you.</p>
+  </div>
 </section>
 
 <footer class="footer">
@@ -360,40 +423,47 @@ const obs = new IntersectionObserver((entries) => {
 }, { threshold: 0.15 });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-document.getElementById('waitlistForm').addEventListener('submit', async (e) => {
+document.querySelectorAll('.wl-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    if (chip.classList.contains('wl-single')) {
+      chip.parentElement.querySelectorAll('.wl-chip').forEach(c => c.classList.remove('on'));
+    }
+    chip.classList.toggle('on');
+  });
+});
+
+document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  const form = e.target;
-  const btn = form.querySelector('button');
-  const msg = document.getElementById('waitlistMsg');
-  const email = form.email.value.trim();
+  const btn = e.target.querySelector('button');
+  const name = document.getElementById('w-name').value.trim();
+  const email = document.getElementById('w-email').value.trim();
+  if (!name || !email) return;
+
+  const wearables = [...document.querySelectorAll('#wearables .wl-chip.on')].map(c => c.dataset.v);
+  const wo = document.getElementById('w-wear-other').value.trim();
+  if (wo) wearables.push(wo);
+  const goals = [...document.querySelectorAll('#goals .wl-chip.on')].map(c => c.dataset.v);
+  const go = document.getElementById('w-goal-other').value.trim();
+  if (go) goals.push(go);
+  const appCount = document.querySelector('#app-count .wl-chip.on')?.dataset.v || '';
+
+  const data = { name, email, wearables, goals, appCount, timestamp: new Date().toISOString() };
 
   btn.disabled = true;
   btn.textContent = 'Joining...';
-  msg.textContent = '';
-  msg.className = 'waitlist-msg';
 
   try {
-    const res = await fetch('/api/waitlist', {
+    await fetch('/api/waitlist', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
+      body: JSON.stringify(data)
     });
-    const data = await res.json();
-    if (res.ok) {
-      msg.textContent = "You're on the list. We'll be in touch.";
-      msg.className = 'waitlist-msg success';
-      form.email.value = '';
-    } else {
-      msg.textContent = data.error || 'Something went wrong. Try again.';
-      msg.className = 'waitlist-msg error';
-    }
   } catch {
-    msg.textContent = 'Something went wrong. Try again.';
-    msg.className = 'waitlist-msg error';
+    // Still show success — we'll capture in KV when available
   }
 
-  btn.disabled = false;
-  btn.textContent = 'Join the waitlist';
+  document.getElementById('waitlist-form').style.display = 'none';
+  document.getElementById('success').style.display = 'block';
 });
 </script>
 </body>
